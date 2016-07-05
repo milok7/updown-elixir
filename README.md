@@ -36,7 +36,7 @@ The package can be installed as:
 
     OR
 
-    use `elixir Application.put_env(:updown, :key, "YOUR-API-KEY")` to change it at any time
+    Use `Application.put_env(:updown, :key, "YOUR-API-KEY")` to change it at any time
 
   ##Usage
 
