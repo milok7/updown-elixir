@@ -10,8 +10,8 @@ defmodule Updown.Edits do
 			:apdex_t (float) = 0.5
 			:enabled (boolean) = true
 			:published (boolean) = false
-			:alias (charlist) = ""
-			:string_match (charlist) = "" 
+			:alias (binary) = ""
+			:string_match (binary) = "" 
 
 		## Examples
 
@@ -24,7 +24,7 @@ defmodule Updown.Edits do
 	@spec add_new(binary, keyword) :: %Updown.Check{}
 	def add_new(url, options \\[]) do
 		header = [{"Accept", "application/json"}, {"Content-Type", "application/json"}]
-		args = URI.encode_query(%{"api-key"=> Updown.apikey})
+		args = URI.encode_query(%{"api-key"=> Application.get_env(:updown, :key)})
 		bdy = Poison.encode!(%{url: url, period: (options[:period]||60), apdex_t: (options[:apdex_t]||0.5), enabled: (options[:enabled]||true), published: (options[:published]||false), alias: (options[:alias]||""), string_match: (options[:string_match]||"")})
 		p = HTTPotion.post(Updown.url<>"?"<>args,[headers: header, body: bdy])
 		Poison.decode!(p.body, as: %Updown.Check{})
@@ -33,13 +33,13 @@ defmodule Updown.Edits do
 		@doc ~S"""
 		Updates a check with the specified parameters
 		Usable options are:
-			:url (charlist)
+			:url (binary)
 			:period (integer)
 			:apdex_t (float)
 			:enabled (boolean)
 			:published (boolean)
-			:alias (charlist)
-			:string_match (charlist) 
+			:alias (binary)
+			:string_match (binary) 
 
 		## Examples
 		
@@ -55,7 +55,7 @@ defmodule Updown.Edits do
 		header = [{"Accept", "application/json"}, {"Content-Type", "application/json"}]
 		chk = Updown.Checks.get_token(token)
 		bdy = Poison.encode!(%{url: (options[:url]||chk.url), period: (options[:period]||chk.period), apdex_t: (options[:apdex_t]||chk.apdex_t), enabled: (options[:enabled]||chk.enabled), published: (options[:published]||chk.published), alias: (options[:alias]||chk.alias), string_match: (options[:string_match]||chk.string_match)})
-		args = URI.encode_query(%{"api-key"=> Updown.apikey})
+		args = URI.encode_query(%{"api-key"=> Application.get_env(:updown, :key)})
 		p = HTTPotion.put(Updown.url<>"/"<>token<>"?"<>args,[headers: header, body: bdy])
 		Poison.decode!(p.body, as: %Updown.Check{})
 	end
@@ -73,7 +73,7 @@ defmodule Updown.Edits do
 	"""
 	@spec remove(binary) :: %{atom => boolean}
 	def remove(token) do
-		args = URI.encode_query(%{"api-key"=> Updown.apikey})
+		args = URI.encode_query(%{"api-key"=> Application.get_env(:updown, :key)})
 		p = HTTPotion.delete(Updown.url<>"/"<>token<>"?"<>args)
 		case p.body do
 			"{\"error\":\"Invalid API key\"}" -> raise Updown.Error, message: "Invalid API key"

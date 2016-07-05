@@ -2,7 +2,6 @@
 /deps
 /doc
 /test
-/config
 erl_crash.dump
 mix.lock
 *.ez

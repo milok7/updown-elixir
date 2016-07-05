@@ -16,7 +16,7 @@ defmodule Updown.Checks do
 	"""
 	@spec get_list() :: list(%Updown.Check{})
 	def get_list do
-		args = URI.encode_query(%{"api-key" => Updown.apikey})
+		args = URI.encode_query(%{"api-key" => Application.get_env(:updown, :key)})
 		b = HTTPotion.get(Updown.url<>"?"<>args)
 		if b.body != "{\"error\":\"Invalid API key\"}" do
 			Poison.decode!(b.body, as: [%Updown.Check{}])
@@ -38,7 +38,7 @@ defmodule Updown.Checks do
 	"""
 	@spec get_token(binary) :: %Updown.Check{}
 	def get_token(token) do
-		args = URI.encode_query(%{"api-key"=> Updown.apikey})
+		args = URI.encode_query(%{"api-key"=> Application.get_env(:updown, :key)})
 		b = HTTPotion.get(Updown.url<>"/"<>token<>"?"<>args)
 		case b.body do
 			"{\"error\":\"Invalid API key\"}" -> raise Updown.Error, message: "Invalid API key"
@@ -59,11 +59,11 @@ defmodule Updown.Checks do
 	"""
 	@spec get_downtimes(binary, integer) :: list(%Updown.Downtime{})
 	def get_downtimes(token, page\\1) do
-		args = URI.encode_query(%{"page" => page , "api-key"=> Updown.apikey})
+		args = URI.encode_query(%{"page" => page , "api-key"=> Application.get_env(:updown, :key)})
 		b = HTTPotion.get(Updown.url<>"/"<>token<>"/downtimes?"<>args)
 		case b.body do
 			"{\"error\":\"Invalid API key\"}" -> raise Updown.Error, message: "Invalid API key"
-			"{\"error\":\"Invalid token:"<>a -> raise Updown.Error, message: "{Invalid token: \""<>a
+			"{\"error\":\"Invalid token:"<>a -> raise Updown.Error, message: "Invalid token"
 			_ -> Poison.decode!(b.body, as: [%Updown.Check{}])
 		end
 	end
@@ -91,11 +91,11 @@ defmodule Updown.Checks do
 		frm = options[:from]||%{DateTime.utc_now | month: DateTime.utc_now.month-1}
 		to = options[:to]||DateTime.utc_now
 		if options[:group]==nil do
-			args = URI.encode_query(%{"from" => frm, "to" => to, "api-key" => Updown.apikey})
+			args = URI.encode_query(%{"from" => frm, "to" => to, "api-key" => Application.get_env(:updown, :key)})
 			b = HTTPotion.get((Updown.url<>"/"<>token<>"/metrics?"<>args))
 			Poison.decode!(b.body, as: %Updown.Metric{})
 		else
-			args = URI.encode_query(%{"from" => frm, "to" => to, "group" => (options[:group]), "api-key" => Updown.apikey})
+			args = URI.encode_query(%{"from" => frm, "to" => to, "group" => (options[:group]), "api-key" => Application.get_env(:updown, :key)})
 			b = HTTPotion.get((Updown.url<>"/"<>token<>"/metrics?"<>args))
 			decoded = Poison.decode!(b.body, as: {}, keys: :atoms)
 			Enum.map(decoded,

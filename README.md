@@ -26,13 +26,17 @@ The package can be installed as:
 
   ##Configuration
 
-  Ensure you change the file lib/updown.ex to contain your API key
+  Ensure the config.exs file contains your API key
 
     ```elixir
-    #lib/updown.ex
-      def apikey do "YOUR-API-KEY" end
+    #config/config.exs
+      config :updown, key: "YOUR-API-KEY"
     ```
     Change `YOUR-API-KEY` to your API key that can be found at your [settings page](https://updown.io/settings/edit)
+
+    OR
+
+    use `elixir Application.put_env(:updown, :key, "YOUR-API-KEY")` to change it at any time
 
   ##Usage
 
