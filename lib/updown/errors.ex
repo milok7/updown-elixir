@@ -1,7 +1,5 @@
 defmodule Updown.Error do
-	@moduledoc ~S"""
-		Basic error exception
-	"""
+	@moduledoc false
 
 	@doc ~S"""
 		A basic error message, if the error being thrown is not known

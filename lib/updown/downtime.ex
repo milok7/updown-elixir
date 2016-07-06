@@ -1,6 +1,4 @@
 defmodule Updown.Downtime do
-	@moduledoc ~S"""
-		Provides a struct for the downtime properties of a check
-	"""
+	@moduledoc false
 	defstruct [:error, :started_at, :ended_at, :duration]
 end

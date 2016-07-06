@@ -1,8 +1,6 @@
 
 defmodule Updown do
-	@moduledoc ~S"""
-		Global variables: url for http calls.
-	"""
+	@moduledoc false
 
 	def url do "https://updown.io/api/checks" end
 	

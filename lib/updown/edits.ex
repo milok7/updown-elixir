@@ -5,6 +5,8 @@ defmodule Updown.Edits do
 
 	@doc ~S"""
 		Adds a new check with specified options
+
+
 		Usable options with their default values are:
 			:period (integer) = 60
 			:apdex_t (float) = 0.5
@@ -32,6 +34,8 @@ defmodule Updown.Edits do
 
 		@doc ~S"""
 		Updates a check with the specified parameters
+
+		
 		Usable options are:
 			:url (binary)
 			:period (integer)

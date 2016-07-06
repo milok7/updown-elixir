@@ -3,7 +3,7 @@ defmodule Updown.Mixfile do
 
   def project do
     [app: :updown,
-     version: "0.1.0",
+     version: "0.1.1",
      elixir: "~> 1.3",
      description: description,
      package: package, 
@@ -32,7 +32,7 @@ defp package do
    files: ["lib", "mix.exs", "README.md"],
    maintainers: ["milesellery"],
    licenses: ["Apache 2.0"],
-   links: %{"Docs" => "http://hexdocs.pm/updown-library/", "Github" => "https://github.com/milok7/updown-elixir"}
+   links: %{"Docs" => "http://hexdocs.pm/updownlibrary/", "Github" => "https://github.com/milok7/updown-elixir"}
    ]
 end
 

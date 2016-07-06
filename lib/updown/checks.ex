@@ -63,14 +63,15 @@ defmodule Updown.Checks do
 		b = HTTPotion.get(Updown.url<>"/"<>token<>"/downtimes?"<>args)
 		case b.body do
 			"{\"error\":\"Invalid API key\"}" -> raise Updown.Error, message: "Invalid API key"
-			"{\"error\":\"Invalid token:"<>a -> raise Updown.Error, message: "Invalid token"
+			"{\"error\":\"Invalid token:"<>_ -> raise Updown.Error, message: "Invalid token"
 			_ -> Poison.decode!(b.body, as: [%Updown.Check{}])
 		end
 	end
 
 	@doc ~S"""
-		Retrieves the metrics for a check with the specified token
-		For the input time, a DateTime struct may be used or a binary in the format "yyyy-mm-dd hh-mm-ss"
+		Retrieves the metrics for a check with the specified token. For the input time, a DateTime struct may be used or a binary in the format "yyyy-mm-dd hh-mm-ss"
+		
+
 		Available options are:
 			:from (binary or DateTime)
 			:to (binary or DateTime)
@@ -81,8 +82,8 @@ defmodule Updown.Checks do
 			iex> Updown.Checks.get_metrics("qqqq")
 			%Updown.Metric{...} # <-- if token exists in your list of checks
 			from = %DateTime{calendar: Calendar.ISO, day: 25, hour: 13, microsecond: {868569, 6}, minute: 26, month: 5, second: 8, std_offset: 0, time_zone: "Etc/UTC", utc_offset: 0, year: 2016, zone_abbr: "UTC"}
-  			Updown.Checks.get_metrics("oooo", from: from, to: DateTime.utc_now, group: "host")
-  			{host, %Updown.Metric{...}, host, %Updown.Metric{...}, ...}
+			iex> Updown.Checks.get_metrics("oooo", from: from, to: DateTime.utc_now, group: "host")
+			{host, %Updown.Metric{...}, host, %Updown.Metric{...}, ...}
 			iex> Updown.Checks.get_metrics("qqqq", from: "2016-06-15 13:37:23")
 			%Updown.Metric{...}
 	"""
@@ -97,10 +98,10 @@ defmodule Updown.Checks do
 		else
 			args = URI.encode_query(%{"from" => frm, "to" => to, "group" => (options[:group]), "api-key" => Application.get_env(:updown, :key)})
 			b = HTTPotion.get((Updown.url<>"/"<>token<>"/metrics?"<>args))
-			decoded = Poison.decode!(b.body, as: {}, keys: :atoms)
+			decoded = Poison.decode!(b.body, as: %{})
 			Enum.map(decoded,
 				fn ({grp, metric}) -> 
-					{grp, Poison.decode!(Poison.encode!(metric), as: %Updown.Metric{})}
+					{grp, Poison.decode!(Poison.encode!(metric), as: %Updown.Metric{}, keys: :atoms)}
 				end)
 		end
 	end
